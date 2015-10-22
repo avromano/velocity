@@ -10,17 +10,17 @@
 			UsersController.search(selUser, populateSearchResult);
 		}
 		
-		function populateSearchResult(searchResult) {
-			if (searchResult == null) {
-				document.getElementById("error").innerHTML = 'No matching people';
+		function populateSearchResult(result, error) {
+			if (error != null && error != '') {
+				document.getElementById("error").innerHTML = error;
 				
 				document.getElementById("id").innerHTML = '';
 				document.getElementById("firstName").innerHTML = '';
 			} else {
 				document.getElementById("error").innerHTML = '';
 				
-				document.getElementById("id").innerHTML = searchResult.id;
-				document.getElementById("firstName").innerHTML = searchResult.first_name;
+				document.getElementById("id").innerHTML = result.id;
+				document.getElementById("firstName").innerHTML = result.first_name;
 			}
 		}
 	</script>
