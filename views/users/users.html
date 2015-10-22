@@ -2,31 +2,27 @@
 <html>
 
 <head>
+	<script src="../../model/users.js" type="text/javascript"></script>
+	<script src="../../controller/usersController.js" type="text/javascript"></script>
 	<script>
-		//TODO Ver si este es el mejor lugar para poner la funcion. (Creo que si, porque se ejecuta desde un boton)
 		function searchUsers() {
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (xhttp.readyState == 4 && xhttp.status == 200) {
-				  var json = JSON.parse(xhttp.responseText);
-				  var selUser = document.getElementById("searchText").value
-				  var result = 'No matching person';
-				  //TODO 'Encapsularlo' en funcion
-				  for(i=0; i<json.length;i++) {
-					  var curPerson = json[i];
-					  //TODO Considerar usar localeCompare
-					  if (curPerson.username == selUser) {
-						  result = curPerson.first_name;
-					  }
-				  }
-				  document.getElementById("id").innerHTML = result;
-				}
-			}
-			//TODO Por que estos parametros?
-			xhttp.open("GET", "users.json", true);
-			xhttp.send();
+			var selUser = document.getElementById("searchText").value
+			UsersController.search(selUser, populateSearchResult);
 		}
 		
+		function populateSearchResult(searchResult) {
+			if (searchResult == null) {
+				document.getElementById("error").innerHTML = 'No matching people';
+				
+				document.getElementById("id").innerHTML = '';
+				document.getElementById("firstName").innerHTML = '';
+			} else {
+				document.getElementById("error").innerHTML = '';
+				
+				document.getElementById("id").innerHTML = searchResult.id;
+				document.getElementById("firstName").innerHTML = searchResult.first_name;
+			}
+		}
 	</script>
 </head>
 
@@ -36,13 +32,16 @@
 
 <table>
 <tr>
-    <th><input type="text" id="searchText"><input type="text" style="display:block" value="Hola!"></th>
+    <th><input type="text" id="searchText"></th>
     <th><button type="button" onclick="searchUsers()">Search</button></th>
  </tr>
 
 </table>
 
 <table>
+	<tr>
+	 <th id="error"></th>
+	</tr>
 	<tr>
 	 <th>Id:</th>
 	 <th id="id"></th>
