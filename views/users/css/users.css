@@ -1,0 +1,15 @@
+div#suggestions {
+	display:none; 
+	position:absolute;
+	background:white; 
+	border-style:solid; 
+	border-width:thin;
+}
+	
+ul#sugList { 
+	list-style: none; 
+	margin: 0; 
+	padding: 0;
+}	
+	
+	

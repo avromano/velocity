@@ -4,6 +4,9 @@
 <head>
 	<script src="../../model/users.js" type="text/javascript"></script>
 	<script src="../../controllers/usersController.js" type="text/javascript"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/users.css">
+	
 	<script>
 		function searchUsers() {
 			var selUser = document.getElementById("searchText").value
@@ -32,12 +35,12 @@
 		function promptSuggestions(suggestions) {
 			if (suggestions != null) {
 				var listSugHTML = '';
-				listSugHTML += '<ul style="list-style: none; margin: 0; padding: 0;">';
+				listSugHTML += '<ul id="sugList">';
 				for(i=0; i<suggestions.length; i++) {
 					listSugHTML += '<li id="sug' + i + '">' + suggestions[i] + '</li>';
 				}
 				listSugHTML += '</ul>';
-				document.getElementById("suggestions").style = "display:block; position:absolute; background:white; border-style:solid; border-width:thin;";
+				document.getElementById("suggestions").style.display = "block";
 				document.getElementById("suggestions").innerHTML = listSugHTML;
 			}
 		}
@@ -50,7 +53,7 @@
 
 <table>
 <tr>
-    <th><input type="text" id="searchText" onKeyUp="newUserEntered()"><div id="suggestions" style="display:none; position:absolute"></th>
+    <th><input type="text" id="searchText" onKeyUp="newUserEntered()"><div id="suggestions"></th>
     <th><button type="button" onclick="searchUsers()">Search</button></th>
  </tr>
 
