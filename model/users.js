@@ -20,7 +20,7 @@ var Users = {
 		xhttp.send();
 	},
 	
-	getMatchingPeople : function (inputPref, callback) {
+	getMatchingUsers : function (inputPref, callback) {
 		inputPref.toLowerCase();
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {

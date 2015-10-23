@@ -12,5 +12,15 @@ var UsersController = {
 		} else {
 			resCallback(null, 'No user selected to start the search');
 		}
+	},
+	
+	suggest : function (enteredText, resCallback) {
+		if (enteredText != null && enteredText.trim() != '') {
+			Users.getMatchingUsers(enteredText, function (result) {
+				resCallback(result);
+				});
+		} else {
+			resCallback([]);
+		}
 	}	
 }
