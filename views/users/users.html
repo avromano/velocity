@@ -8,6 +8,9 @@
 	<link rel="stylesheet" type="text/css" href="css/users.css">
 	
 	<script>
+		var curSuggestions = [];
+		var selectedSug = 0;
+		
 		function searchUsers() {
 			var selUser = document.getElementById("searchText").value
 			UsersController.search(selUser, populateSearchResult);
@@ -27,12 +30,56 @@
 			}
 		}
 		
-		function newUserEntered() {
-			var enteredUser = document.getElementById("searchText").value;
-			UsersController.suggest(enteredUser, promptSuggestions);
+		function newUserEntered(event) {
+			var keyPressedCode;
+
+            if (window.event) { // IE					
+            	keyPressedCode = event.keyCode;
+            } else if (event.which) { // Netscape/Firefox/Opera					
+            	keyPressedCode = event.which;
+			} else {
+				alert('The suggestions cannot be displayed. Error: The entered key could not be processed');
+				return;
+			}
+			switch(keyPressedCode) {
+				case 38: //Arrow up key
+				case 40: //Arrow down key
+					var totalSug = curSuggestions.length;
+					if (totalSug > 0) {
+						var oldSelElemId = "sug" + selectedSug;
+						document.getElementById(oldSelElemId).className = "";
+												
+						if (keyPressedCode == 38) {
+							selectedSug = (selectedSug == 0) ? totalSug-1 : selectedSug-1;
+						} else {
+							selectedSug = (selectedSug+1) % totalSug;
+						}
+						
+						var newSelElemId ="sug"+selectedSug;
+						document.getElementById(newSelElemId).className = "selected";
+						
+						document.getElementById("suggestions").style.display = "block";
+					}
+					break;
+				case 13: //Enter key
+					if (selectedSug != -1) {
+						document.getElementById("searchText").value = curSuggestions[selectedSug];
+						document.getElementById("suggestions").style.display = "none";
+					}
+					break;
+				case 27: //Esc key
+					hideSuggestions();
+					break;
+				default:
+					//TODO Limitar los escenarios a cuando cambia el texto
+					var enteredUser = document.getElementById("searchText").value;
+					UsersController.suggest(enteredUser, promptSuggestions);
+					break;
+			}
 		}
 		
 		function promptSuggestions(suggestions) {
+			selectedSug = 0;
 			if (suggestions != null) {
 				var listSugHTML = '';
 				listSugHTML += '<ul id="sugList">';
@@ -42,6 +89,18 @@
 				listSugHTML += '</ul>';
 				document.getElementById("suggestions").style.display = "block";
 				document.getElementById("suggestions").innerHTML = listSugHTML;
+				
+				curSuggestions = suggestions;
+			}
+		}
+		
+		function hideSuggestions() {
+			document.getElementById("suggestions").style.display = "none";
+		}
+		
+		function promptSuggestionsIfLoaded() {
+			if (curSuggestions != []) {
+				document.getElementById("suggestions").style.display = "block";
 			}
 		}
 	</script>
@@ -53,7 +112,13 @@
 
 <table>
 <tr>
-    <th><input type="text" id="searchText" onKeyUp="newUserEntered()"><div id="suggestions"></th>
+    <th>
+		<input type="text" id="searchText"
+			onKeyUp="newUserEntered(event)"
+			onFocus="promptSuggestionsIfLoaded()"
+			onBlur="hideSuggestions()" >
+		<div id="suggestions">
+	</th>
     <th><button type="button" onclick="searchUsers()">Search</button></th>
  </tr>
 
