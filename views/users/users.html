@@ -38,7 +38,6 @@
             } else if (event.which) { // Netscape/Firefox/Opera					
             	keyPressedCode = event.which;
 			} else {
-				alert('The suggestions cannot be displayed. Error: The entered key could not be processed');
 				return;
 			}
 			switch(keyPressedCode) {
@@ -46,25 +45,19 @@
 				case 40: //Arrow down key
 					var totalSug = curSuggestions.length;
 					if (totalSug > 0) {
-						var oldSelElemId = "sug" + selectedSug;
-						document.getElementById(oldSelElemId).className = "";
-												
 						if (keyPressedCode == 38) {
-							selectedSug = (selectedSug == 0) ? totalSug-1 : selectedSug-1;
+							selectedSug = (selectedSug <= 0) ? totalSug-1 : selectedSug-1;
 						} else {
 							selectedSug = (selectedSug+1) % totalSug;
 						}
-						
-						var newSelElemId ="sug"+selectedSug;
-						document.getElementById(newSelElemId).className = "selected";
-						
-						document.getElementById("suggestions").style.display = "block";
+						promptSuggestions(curSuggestions);
 					}
 					break;
 				case 13: //Enter key
 					if (selectedSug != -1) {
 						document.getElementById("searchText").value = curSuggestions[selectedSug];
-						document.getElementById("suggestions").style.display = "none";
+						curSuggestions = [];
+						hideSuggestions();
 					}
 					break;
 				case 27: //Esc key
@@ -73,34 +66,62 @@
 				default:
 					//TODO Limitar los escenarios a cuando cambia el texto
 					var enteredUser = document.getElementById("searchText").value;
-					UsersController.suggest(enteredUser, promptSuggestions);
+					UsersController.suggest(enteredUser, getAndPromptSuggestions);
 					break;
 			}
 		}
 		
+		function getAndPromptSuggestions(suggestions) {
+			if (suggestions.length > 0) {
+				selectedSug = 0;
+			}
+			promptSuggestions(suggestions);
+			curSuggestions = suggestions;
+		}
+		
 		function promptSuggestions(suggestions) {
-			selectedSug = 0;
 			if (suggestions != null) {
 				var listSugHTML = '';
 				listSugHTML += '<ul id="sugList">';
-				for(i=0; i<suggestions.length; i++) {
-					listSugHTML += '<li id="sug' + i + '">' + suggestions[i] + '</li>';
+				for (i in suggestions) {
+					var selected = '';
+					if (i == selectedSug) {
+						selected = ' class ="selected" ';
+					}
+					listSugHTML += '<li'+selected+'>' + suggestions[i] + '</li>';
 				}
 				listSugHTML += '</ul>';
 				document.getElementById("suggestions").style.display = "block";
 				document.getElementById("suggestions").innerHTML = listSugHTML;
-				
-				curSuggestions = suggestions;
 			}
 		}
 		
 		function hideSuggestions() {
+			selectedSug = -1;
+			document.getElementById("suggestions").innerHTML = "";
 			document.getElementById("suggestions").style.display = "none";
 		}
 		
 		function promptSuggestionsIfLoaded() {
-			if (curSuggestions != []) {
-				document.getElementById("suggestions").style.display = "block";
+			if (curSuggestions.length > 0) {
+				promptSuggestions(curSuggestions);
+			}
+		}
+		
+		function preventDefBehaviours(event) {
+			var keyPressedCode;
+
+            if (window.event) { // IE					
+            	keyPressedCode = event.keyCode;
+            } else if (event.which) { // Netscape/Firefox/Opera					
+            	keyPressedCode = event.which;
+			} else {
+				alert('The suggestions cannot be displayed. Error: The entered key could not be processed');
+				return;
+			}
+			
+			if (keyPressedCode == 13 || keyPressedCode == 27) {
+				event.preventDefault();
 			}
 		}
 	</script>
@@ -114,6 +135,7 @@
 <tr>
     <th>
 		<input type="text" id="searchText"
+			onKeyDown="preventDefBehaviours(event)"
 			onKeyUp="newUserEntered(event)"
 			onFocus="promptSuggestionsIfLoaded()"
 			onBlur="hideSuggestions()" >
