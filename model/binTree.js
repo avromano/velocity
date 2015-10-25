@@ -29,7 +29,7 @@ var BinTree = function() {
 					curTree.right = newNode;
 					break;
 				} else {
-					curTree.right = newNode;
+					curTree = curTree.right;
 				}
 			} else { //Unexpected result of comp function -> Return input tree unchanged
 				break;
@@ -39,7 +39,7 @@ var BinTree = function() {
 		return tree;
 	}
 	
-	function isInTree(k, compFunc, tree) {
+	function getValue(k, compFunc, tree) {
 		if (tree == null) {
 			return false;
 		}
@@ -47,21 +47,21 @@ var BinTree = function() {
 		while(true) {
 			var compRes = compFunc(k, curTree.key);
 			if (compRes == 0) { //Match found
-				return true;
+				return curTree.value;
 			} else if (compRes == -1) {
 				if (curTree.left != null) {
 					curTree = curTree.left;
 				} else {
-					return false;
+					return null;
 				}
 			} else if (compRes == 1) {
 				if (curTree.right != null) {
 					curTree = curTree.right;
 				} else {
-					return false;
+					return null;
 				}
-			} else { //Unexpected result of comp function -> Return false
-				return false;
+			} else { //Unexpected result of comp function -> Return null
+				return null;
 			}
 		}
 	}
@@ -70,19 +70,20 @@ var BinTree = function() {
 		var compFunc = function compStrings(str1, str2) {
 			return str1.localeCompare(str2);
 		}
-		var tree1 = append('hola', 'hola', compFunc, null);
-		var tree2 = append('chau', 'chau', compFunc, tree1);
-		var tree3 = append('como', 'como', compFunc, tree2);
+		var tree1 = append('hola', '1', compFunc, null);
+		var tree2 = append('chau', '2', compFunc, tree1);
+		var tree3 = append('como', '3', compFunc, tree2);
 		
 		console.log(tree3.left);
 		
-		var isIn = isInTree('chau', compFunc, tree2);
+		var isIn = getValue('chau', compFunc, tree2);
 		
 		console.log(isIn);
 	}
 	
 	return {
 		append:append,
+		getValue:getValue,
 		test:test,
 	}	
 }();
