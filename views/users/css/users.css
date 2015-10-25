@@ -1,3 +1,19 @@
+textarea {
+	color:black;
+}
+
+table#results {
+	width: 325px;
+}
+
+col#tagCol {
+	width:100px;
+}
+
+col#valCol {
+	width:225px
+}
+
 div#suggestions {
 	display:none; 
 	position:absolute;

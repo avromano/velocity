@@ -19,14 +19,37 @@
 		function populateSearchResult(result, error) {
 			if (error != null && error != '') {
 				document.getElementById("error").innerHTML = error;
-				
+
 				document.getElementById("id").innerHTML = '';
 				document.getElementById("firstName").innerHTML = '';
+				document.getElementById("title").innerHTML = '';
+				document.getElementById("lastName").innerHTML = '';
+				document.getElementById("userName").innerHTML = '';
+				document.getElementById("email").innerHTML = '';
+				document.getElementById("city").innerHTML = '';
+				document.getElementById("country").innerHTML = '';
+				document.getElementById("fav_color").innerHTML = '';
+				document.getElementById("fav_color").style.backgroundColor = '';
+				document.getElementById("blog").innerHTML = '';
 			} else {
 				document.getElementById("error").innerHTML = '';
 				
 				document.getElementById("id").innerHTML = result.id;
 				document.getElementById("firstName").innerHTML = result.first_name;
+				document.getElementById("title").innerHTML = result.title;
+				document.getElementById("lastName").innerHTML = result.last_name;
+				document.getElementById("userName").innerHTML = result.username;
+				document.getElementById("email").innerHTML = result.email;
+				document.getElementById("city").innerHTML = result.city;
+				document.getElementById("country").innerHTML = result.country;
+				document.getElementById("fav_color").style.backgroundColor = result.fav_color;
+
+				var htmlBlog = '';
+				var blogLink = result.blog;
+				if (blogLink != null && blogLink.trim() != '') {
+					htmlBlog = '<a href="' + blogLink + '"> Link </a>';
+				}
+				document.getElementById("blog").innerHTML = htmlBlog;
 			}
 		}
 		
@@ -125,6 +148,9 @@
 			}
 		}
 	</script>
+
+	<title>People Profiles</title>
+
 </head>
 
 <body>
@@ -132,49 +158,84 @@
 <h2>People Profiles</h2>
 
 <table>
-<tr>
-    <th>
-		<input type="text" id="searchText"
-			onKeyDown="preventDefBehaviours(event)"
-			onKeyUp="newUserEntered(event)"
-			onFocus="promptSuggestionsIfLoaded()"
-			onBlur="hideSuggestions()" >
-		<div id="suggestions">
-	</th>
-    <th><button type="button" onclick="searchUsers()">Search</button></th>
- </tr>
-
+	<tr>
+		<td>
+			<label for="searchText">User name:</label>
+		</td>
+		<td>
+			<input type="text" id="searchText"
+				onKeyDown="preventDefBehaviours(event)"
+				onKeyUp="newUserEntered(event)"
+				onFocus="promptSuggestionsIfLoaded()"
+				onBlur="hideSuggestions()" />
+			<div id="suggestions"/>
+		</td>
+		<td>
+			<button type="button" onclick="searchUsers()">Search</button>
+		</td>
+	</tr>
 </table>
 
-<table>
+<table id="results">
+	<colgroup>
+		<col id="tagCol">
+		<col id="valCol">
+	</colgroup>
 	<tr>
-	 <th id="error"></th>
+		<td>Error:</td>
+		<td><textarea disabled id="error"></textarea></td>
 	</tr>
 	<tr>
-	 <th>Id:</th>
-	 <th id="id"></th>
+		<td>Id:</td>
+		<td><textarea disabled id="id"></textarea></td>
 	</tr>
-	
+
 	<tr>
-	 <th>First Name:</th>
-	 <th id="firstName"></th>
+		<td>Title:</td>
+		<td><textarea disabled id="title"></textarea></td>
 	</tr>
-	
+
 	<tr>
-	 <th>Last Name:</th>
-	 <th id="lastName"></th>
+		<td>First Name:</td>
+		<td><textarea disabled id="firstName"></textarea></td>
 	</tr>
-	
+
 	<tr>
-	 <th>User Name:</th>
-	 <th id="userName"></th>
+		<td>Last Name:</td>
+		<td><textarea disabled id="lastName"></textarea></td>
 	</tr>
-	
+
+	<tr>
+		<td>User Name:</td>
+		<td><textarea disabled id="userName"></textarea></td>
+	</tr>
+
+	<tr>
+		<td>Email:</td>
+		<td><textarea disabled id="email"></textarea></td>
+	</tr>
+
+	<tr>
+		<td>City:</td>
+		<td><textarea disabled  id="city"></textarea></td>
+	</tr>
+
+	<tr>
+		<td>Country:</td>
+		<td><textarea disabled id="country"></textarea></td>
+	</tr>
+
+	<tr>
+		<td>Favourite colour:</td>
+		<td><textarea disabled id="fav_color"></textarea></td>
+	</tr>
+
+	<tr>
+		<td>Blog:</td>
+		<td id="blog"></td>
+	</tr>
+
 </table>
-<!--{"id":217,"first_name":"Stephanie","last_name":"Webb","username":"swebb0","email":"swebb0@cmu.edu","city":"Awb\u0101r\u012b","country":"Libya","fav_color":"#b7d69f","blog":"http://phoca.cz/vestibulum/sed.png?in=nec&congue=nisi&etiam=volutpat&justo=eleifend&etiam=donec&pretium=ut&iaculis=dolor&justo=morbi&in=vel&hac=lectus&habitasse=in&platea=quam&dictumst=fringilla&etiam=rhoncus&faucibus=mauris&cursus=enim&urna=leo&ut=rhoncus&tellus=sed&nulla=vestibulum&ut=sit&erat=amet&id=cursus&mauris=id&vulputate=turpis&elementum=integer&nullam=aliquet&varius=massa&nulla=id&facilisi=lobortis&cras=convallis&non=tortor&velit=risus&nec=dapibus&nisi=augue&vulputate=vel&nonummy=accumsan&maecenas=tellus&tincidunt=nisi&lacus=eu&at=orci&velit=mauris&vivamus=lacinia&vel=sapien&nulla=quis&eget=libero&eros=nullam&elementum=sit&pellentesque=amet&quisque=turpis&porta=elementum&volutpat=ligula&erat=vehicula&quisque=consequat&erat=morbi&eros=a&viverra=ipsum&eget=integer&congue=a&eget=nibh&semper=in&rutrum=quis&nulla=justo&nunc=maecenas&purus=rhoncus&phasellus=aliquam&in=lacus&felis=morbi&donec=quis","title":"Sr"}-->
-
-
-
 
 </body>
 </html>
