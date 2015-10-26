@@ -41,7 +41,7 @@ var BinTree = function() {
 	
 	function getValue(k, compFunc, tree) {
 		if (tree == null) {
-			return false;
+			return null;
 		}
 		var curTree = tree;
 		while(true) {
@@ -66,24 +66,8 @@ var BinTree = function() {
 		}
 	}
 	
-	function test() {
-		var compFunc = function compStrings(str1, str2) {
-			return str1.localeCompare(str2);
-		}
-		var tree1 = append('hola', '1', compFunc, null);
-		var tree2 = append('chau', '2', compFunc, tree1);
-		var tree3 = append('como', '3', compFunc, tree2);
-		
-		console.log(tree3.left);
-		
-		var isIn = getValue('chau', compFunc, tree2);
-		
-		console.log(isIn);
-	}
-	
 	return {
 		append:append,
 		getValue:getValue,
-		test:test,
 	}	
 }();

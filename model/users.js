@@ -6,6 +6,10 @@ var Users = function() {
 	var cachedSug = {};
 	
 	function getPerson(selUser, callback) {
+		if (!selUser) {
+			callback(null);
+			return;
+		}
 		filterUsersJson(function(json, freshValue) {
 			selUser = selUser.toLowerCase();
 			var result = null;
@@ -30,6 +34,10 @@ var Users = function() {
 	}
 	
 	function getMatchingUsers(enteredUsr, callback) {
+		if (!enteredUsr || enteredUsr.trim() == '') {
+			callback([]);
+			return;
+		}
 		filterUsersJson(function(json, freshValue) {	  
 			if (freshValue || !usersList || usersList.length == 0) {
 				if (json) {
