@@ -2,6 +2,8 @@ var Users = function() {
 	
 	var usersJson = null;
 	var usersTree = null;
+	var usersList = [];
+	var cachedSug = {};
 	
 	function getPerson(selUser, callback) {
 		filterUsersJson(function(json, freshValue) {
@@ -27,25 +29,36 @@ var Users = function() {
 		});
 	}
 	
-	function getMatchingUsers(inputPref, callback) {
+	function getMatchingUsers(enteredUsr, callback) {
 		filterUsersJson(function(json, freshValue) {	  
-			inputPref = inputPref.toLowerCase();
-			var selectedUsers = [];
-			if (json) {
-				var users = [];
-				for(i in json) {
-					var curPerson = json[i];
-					users.push(curPerson.username);
+			if (freshValue || !usersList || usersList.length == 0) {
+				if (json) {
+					var users = [];
+					for(i in json) {
+						var curPerson = json[i];
+						users.push(curPerson.username);
+					}
+					usersList = users;
+				} else {
+					usersList = [];
 				}
-				var n = inputPref.length;
-				for(i in users) {
-					var curUser = users[i];
-					var curUserPref = curUser.substring(0, n).toLowerCase();
-					if (inputPref == curUserPref) {
+				cachedSug = {};
+			}
+			var selectedUsers = [];
+			var cache = cachedSug[enteredUsr];
+			if (cache) {
+				selectedUsers = cache;
+			} else {
+				for(i in usersList) {
+					var curUser = usersList[i];
+					var re = new RegExp(enteredUsr, 'i');
+					if (curUser.match(re)) {
 						selectedUsers.push(curUser);
 					}
 				}
+				cachedSug[enteredUsr] = selectedUsers;
 			}
+
 			callback(selectedUsers);
 		});
 	}
