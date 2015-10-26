@@ -1,21 +1,25 @@
 var Users = function() {
 	
-	/* Cached array of object reprsentations of file users.json */
+	/* Cached array of records in file users.json */
 	var usersJson = null;
-	/* Cached binary tree of positions in array usersJson indexed by username */
+	/* Cached binary tree of positions in array usersJson keyed by username */
 	var usersTree = null;
-	/* Cahed users of users.json*/
+	/* Cached users of usersJson*/
 	var usersList = [];
-	/* Cached suggestions for given username inputs */
+	/* Cached suggestions for given username input */
 	var cachedSug = {};
 	
 	/*
-	 * Sends the person that exact matches the entered user to the
-	 * callback taken as parameter.
+	 * Retrieves the person profile that matches with the entered 
+	 * username. The result is sent using a callback.
 	 * 
 	 * Input parameters:
 	 *  selUser: username of the person to be searched
 	 *  callback: function to be called to send the result
+	 * 
+	 * Returns:
+	 *  Object representing a person profile from users.json or null
+	 *  if there are no matches.
 	 */
 	function getPerson(selUser, callback) {
 		if (!selUser) {
@@ -51,12 +55,15 @@ var Users = function() {
 	}
 	
 	/*
-	 * Sends a list of similar usernames to the 
-	 * callback taken as parameter.
+	 * Builds a list of usernames which are similar to the one provided.
+	 * The result is sent using a callback.
 	 * 
 	 * Input parameters:
-	 *  enteredUsr: entered username to search similar matches
-	 *  callback: function to be called to send the similar matches
+	 *  enteredUsr: entered username to perform the search
+	 *  callback: function to be called to send the similar usernames
+	 * 
+	 * Returns:
+	 *  List of matching usernames. (May be empty)
 	 */
 	function getMatchingUsers(enteredUsr, callback) {
 		if (!enteredUsr || enteredUsr.trim() == '') {
@@ -105,8 +112,9 @@ var Users = function() {
 	 * 
 	 * Input parameters:
 	 *  filter : function to be executed on the values of users.json.
-	 *  If the cache for users.json is updated (usersJson) the second
-	 *  parameter must be 'true', otherwise, 'false'.
+	 *  Its second parameter must be a boolean value that indicates
+	 *  whether the cache for users.json, usersJson, has been updated in
+	 *  filterUsersJson.
 	 */
 	function filterUsersJson(filter) {
 		if (usersJson) {
