@@ -1,15 +1,28 @@
 var Users = function() {
 	
+	/* Cached array of object reprsentations of file users.json */
 	var usersJson = null;
+	/* Cached binary tree of positions in array usersJson indexed by username */
 	var usersTree = null;
+	/* Cahed users of users.json*/
 	var usersList = [];
+	/* Cached suggestions for given username inputs */
 	var cachedSug = {};
 	
+	/*
+	 * Sends the person that exact matches the entered user to the
+	 * callback taken as parameter.
+	 * 
+	 * Input parameters:
+	 *  selUser: username of the person to be searched
+	 *  callback: function to be called to send the result
+	 */
 	function getPerson(selUser, callback) {
 		if (!selUser) {
 			callback(null);
 			return;
 		}
+		//Get contents in usersJson
 		filterUsersJson(function(json, freshValue) {
 			selUser = selUser.toLowerCase();
 			var result = null;
@@ -17,9 +30,13 @@ var Users = function() {
 				var compFunc = function compStrings(str1, str2) {
 					return str1.localeCompare(str2);
 				}
+				//If usersJson has been updated or usersTree is not set,
+				//update usersTree
 				if (freshValue || !usersTree) {
 					var newBinTree = null;
 					for(i in json) {
+						//Each node of the tree has as value the position
+						//of the person in array usersJson
 						newBinTree = BinTree.append(json[i].username.toLowerCase(), i, compFunc, newBinTree);
 					}
 					usersTree = newBinTree;
@@ -33,12 +50,23 @@ var Users = function() {
 		});
 	}
 	
+	/*
+	 * Sends a list of similar usernames to the 
+	 * callback taken as parameter.
+	 * 
+	 * Input parameters:
+	 *  enteredUsr: entered username to search similar matches
+	 *  callback: function to be called to send the similar matches
+	 */
 	function getMatchingUsers(enteredUsr, callback) {
 		if (!enteredUsr || enteredUsr.trim() == '') {
 			callback([]);
 			return;
 		}
+		//Get contents in usersJson
 		filterUsersJson(function(json, freshValue) {	  
+			//If usersJson is updated or there are no cached users,
+			//update usersList
 			if (freshValue || !usersList || usersList.length == 0) {
 				if (json) {
 					var users = [];
@@ -50,6 +78,7 @@ var Users = function() {
 				} else {
 					usersList = [];
 				}
+				//Clear cache of previous suggestions
 				cachedSug = {};
 			}
 			var selectedUsers = [];
@@ -71,6 +100,14 @@ var Users = function() {
 		});
 	}
 	
+	/*
+	 * Applies the filter taken as argument to the values of users.json.
+	 * 
+	 * Input parameters:
+	 *  filter : function to be executed on the values of users.json.
+	 *  If the cache for users.json is updated (usersJson) the second
+	 *  parameter must be 'true', otherwise, 'false'.
+	 */
 	function filterUsersJson(filter) {
 		if (usersJson) {
 			filter(usersJson, false);
@@ -88,6 +125,8 @@ var Users = function() {
 					}
 				}
 			}
+			//A random number is added at the end in order to prevent
+			//the browser to get catched values
 			xhttp.open("GET", "/data/users.json?"+Math.random(), true);
 			xhttp.send();
 		}

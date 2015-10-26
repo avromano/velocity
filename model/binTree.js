@@ -1,4 +1,16 @@
 var BinTree = function() {
+	/* 
+	 * Appends a new node to the binary tree taken as parameter.
+	 * 
+	 * Input parameters:
+	 *  k : key of the node to be added 
+	 *  val : val of the node to be added
+	 *  compFunc : function used to compare two keys in the tree 
+	 *  tree : tree to which the new node will be added
+	 * 
+	 * Returns:
+	 *  New tree 
+	 */
 	function append(k, val, compFunc, tree) {
 		var newNode = {
 			key : k,
@@ -39,6 +51,15 @@ var BinTree = function() {
 		return tree;
 	}
 	
+    /* 
+	 * Gets the value of the node identified by the key taken as argument or null if
+	 * there is no such node.
+	 * 
+	 * Input parameters:
+	 *  k : key of the node whose value wants to be retrieved
+	 *  compFunc : function used to compare two keys in the tree
+	 *  tree : binary tree to be searched
+	 */ 
 	function getValue(k, compFunc, tree) {
 		if (tree == null) {
 			return null;
