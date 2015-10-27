@@ -16,6 +16,9 @@ var UsersController = function() {
 	function suggest(enteredText, resCallback) {
 		if (enteredText != null && enteredText.trim() != '') {
 			Users.getMatchingUsers(enteredText, function (result) {
+				if (result && result.length > 15) {
+					result = result.slice(0,15);
+				}
 				resCallback(result);
 				});
 		} else {
